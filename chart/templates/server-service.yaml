@@ -12,8 +12,8 @@ spec:
   selector:
     app.kubernetes.io/name: {{ template "sinch.cc2022.smppdemo.server.name" . }}
   ports:
-    - name: http
-      port: 80
-      targetPort: http
+    - name: smpp
+      port: 3601
+      targetPort: smpp
   type: ClusterIP
 

@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -15,6 +17,14 @@ import (
 func main() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	router := gin.Default()
+
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"Status": "OK",
+		})
+	})
 
 	s := server.NewServer("test", 3601,
 		func(c server.Conn, submit *message.ShortMessage) (*message.ShortMessageResp, error) {

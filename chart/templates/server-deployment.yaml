@@ -43,6 +43,9 @@ spec:
             - containerPort: 3601
               name: smpp
               protocol: TCP
+            - containerPort: 8080
+              name: http
+              protocol: TCP  
           livenessProbe:
             httpGet:
               path: /health
