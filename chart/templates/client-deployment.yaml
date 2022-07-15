@@ -35,10 +35,10 @@ spec:
 {{ toYaml . | indent 12 }}
           {{- end }}
            env:
-            - name: SERVER_ADDR
-              value: {{ include "sinch.cc2022.smppdemo.server.name" . | quote }}
-            - name: SERVER_PORT
-              value: "3601"
+           - name: SERVER_ADDR
+             value: {{ include "sinch.cc2022.smppdemo.server.name" . | quote }}
+           - name: SERVER_PORT
+             value: "3601"
           ports:
             - containerPort: 8080
               name: http
