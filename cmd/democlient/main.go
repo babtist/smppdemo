@@ -11,8 +11,15 @@ import (
 )
 
 func main() {
-	client := client.NewClient("127.0.0.1:3601", "client", "pw")
-	client.Bind()
+	serverAddr := os.Getenv("SERVER_ADDR")
+	serverPort := os.Getenv("SERVER_PORT")
+	client := client.NewClient(serverAddr+":"+serverPort, "client", "pw")
+
+	bindAttempts := 0
+
+	for bindAttempts < 10 {
+		client.Bind()
+	}
 
 	router := gin.Default()
 
