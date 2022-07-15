@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sinch.cc2022.smppdemo.server.name" . }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "sinch.cc2022.smppdemo.server.name" . }}
+  replicas: {{ .Values.server.replicaCount }}
+  template:
+    metadata:
+      labels:
+{{ include "sinch.cc2022.smppdemo.server.labels" . | indent 8 }}
+    spec:
+      imagePullSecrets:
+      - name: {{ .Values.imageCredentials.registry.pullSecret }}
+      {{- with .Values.server.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.affinity }}
+      affinity:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.server.podSecurityContext }}
+      securityContext:
+{{ toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: server
+          image: {{ template "sinch.cc2022.smppdemo.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ .Values.images.server.name }}:{{ tpl .Values.images.server.tag . }}
+          imagePullPolicy: {{ .Values.imageCredentials.registry.imagePullPolicy }}
+          {{- with .Values.server.resources }}
+          resources:
+{{ toYaml . | indent 12 }}
+          {{- end }}
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: {{ .Values.server.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.server.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.server.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.server.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.server.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: {{ .Values.server.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.server.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.server.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.server.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.server.readinessProbe.failureThreshold }}
+          securityContext:
+{{ toYaml .Values.server.securityContext | nindent 12 }}
+      

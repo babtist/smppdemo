@@ -15,6 +15,13 @@ func main() {
 	client.Bind()
 
 	router := gin.Default()
+
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"Status": "OK",
+		})
+	})
+
 	router.GET("/submit", func(c *gin.Context) {
 		text := c.Param("text")
 		orig := c.Param("orig")
