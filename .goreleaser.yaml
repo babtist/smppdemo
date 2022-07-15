@@ -1,0 +1,51 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+project_name: smppdemo
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    id: demoserver
+    main: ./cmd/demoserver  
+    binary: demoserver
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    id: democlient
+    main: ./cmd/democlient
+    binary: democlient
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+dockers:
+  - image_templates: [ "571908524012.dkr.ecr.eu-north-1.amazonaws.com/thobab/demoserver:{{ .Tag }}"]
+    dockerfile: docker/demoserver/Dockerfile
+    goos: linux
+    goarch: amd64
+    ids:
+    - demoserver
+    skip_push: false
+  - image_templates: [ "571908524012.dkr.ecr.eu-north-1.amazonaws.com/thobab/democlient:{{ .Tag }}"]
+    dockerfile: docker/democlient/Dockerfile
+    goos: linux
+    goarch: amd64
+    ids:
+    - democlient
+    skip_push: false
