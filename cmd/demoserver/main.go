@@ -25,6 +25,7 @@ func main() {
 			"Status": "OK",
 		})
 	})
+	router.Run()
 
 	s := server.NewServer("test", 3601,
 		func(c server.Conn, submit *message.ShortMessage) (*message.ShortMessageResp, error) {
