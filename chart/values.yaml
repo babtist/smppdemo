@@ -11,10 +11,10 @@ imageCredentials:
 images:
   client:
     name: democlient
-    tag: 0.0.1-beta7
+    tag: 0.0.1-beta8
   server:
     name: demoserver
-    tag: 0.0.1-beta7
+    tag: 0.0.1-beta8
 
 client:
   service: {}
