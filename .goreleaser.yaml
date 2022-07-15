@@ -36,6 +36,9 @@ changelog:
       - '^docs:'
       - '^test:'
 
+release:
+  disable: true
+
 dockers:
   - image_templates: [ "571908524012.dkr.ecr.eu-north-1.amazonaws.com/thobab/demoserver:{{ .Tag }}"]
     dockerfile: docker/demoserver/Dockerfile
