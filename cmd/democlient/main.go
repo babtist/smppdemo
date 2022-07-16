@@ -1,24 +1,28 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/sinchop/smpp/client"
-	"github.com/sinchop/smpp/message"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/gin-gonic/gin"
+	"github.com/sinchop/smpp/client"
+	"github.com/sinchop/smpp/message"
 )
 
 func main() {
 	serverAddr := os.Getenv("SERVER_ADDR")
 	serverPort := os.Getenv("SERVER_PORT")
+	fmt.Println("Connecting to " + serverAddr + ":" + serverPort)
 	client := client.NewClient(serverAddr+":"+serverPort, "client", "pw")
 
 	bindAttempts := 0
 
 	for bindAttempts < 10 {
 		client.Bind()
+		bindAttempts++
 	}
 
 	router := gin.Default()
