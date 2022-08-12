@@ -1,4 +1,4 @@
-module githubb.com/babtist/smppdemo
+module github.com/babtist/smppdemo
 
 go 1.18
 
